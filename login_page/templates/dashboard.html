@@ -1,0 +1,111 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+
+<body>
+    <div class="container-fluid bg-success">
+        <h1 class="text-center  text-white pt-4">Admin Dashboard</h1>
+        <div class="col-sm-12 d-flex justify-content-end">
+            <div class="text-right mb-2 mx-2">
+                <a href="{% url 'home_page' %}" class="btn btn-info shadow-sm">Home</a>
+            </div>
+            <div class="text-right mb-2 mx-2">
+                <a href="{% url 'logout_page' %}" class="btn btn-danger shadow-sm">Logout</a>
+            </div>
+        </div>
+    </div>
+    <div class="container mt-4">
+
+        <div class="row">
+            <div class="col-sm-4 mt-2">
+                <h4 class="text-center alert alert-info">Add/Update User</h4>
+                <form id="user-form" action="{% url 'save_data' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="userid" id="userid">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" class="form-control" id="username" name="username" placeholder="Username">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="Email">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" class="form-control" id="password" name="password"
+                            placeholder="Password">
+                    </div>
+
+                    {% for x in messages %}
+                    
+                    <div class="alert alert-danger px-1" id="error">{{x}}</div>
+                    
+                    {% endfor %}
+                    <button type="submit" class="btn btn-success">Save</button>
+                </form>
+            </div>
+            <div class="col-sm-1"></div>
+            <div class="col-sm-7">
+                <div class="row">
+                    
+                    <div class="col-sm-12">
+                        <h4 class="text-center alert alert-success mt-2">User Information</h4>
+                    </div>
+                    <div class="col-sm-12 d-flex justify-content-between">
+                        <div class="input-group mt-2">
+                            <input type="text" id="search-input" class="form-control" placeholder="Search users...">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" type="button" id="search-button">Search</button>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <div class="col-sm-12">
+                        <table class="table table-hover mt-4">
+                            <thead>
+                                <tr>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Email</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="user-table">
+                                {% for user in user %}
+                                <tr  data-id="{{ user.id }}" >
+                                    <td>{{ user.id }}</td>
+                                    <td>{{ user.username }}</td>
+                                    <td>{{ user.email }}</td>
+                                    <td>
+                                        <a class="btn btn-warning btn-sm m-1 edit-user" 
+                                            data-id="{{ user.id }}">Edit</a>
+                                        <a class="btn btn-danger btn-sm m-1 delete-user"
+                                            data-id="{{ user.id }}">Delete</a>
+
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    {% include "scripts.html" %}
+</body>
+
+</html>

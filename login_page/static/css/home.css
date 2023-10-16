@@ -1,0 +1,23 @@
+
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url(../images/home1.jpg);
+            background-size: cover;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container-fluid {
+            background-color: #05004d;
+            
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .box {
+            background-color: rgba(208, 208, 208, 0.8);
+            border-radius: 10px;
+            color: #000000;
+        }

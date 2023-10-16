@@ -1,0 +1,96 @@
+<script>
+
+    // Delete User 
+
+    document.addEventListener("DOMContentLoaded", function () {
+        var deleteButtons = document.querySelectorAll(".delete-user");
+        deleteButtons.forEach(function (button) {
+            button.addEventListener("click", async function () {
+                var userId = this.getAttribute("data-id");
+                var row = document.querySelector('tr[data-id="'+userId+'"]');
+
+                 fetch(`http://127.0.0.1:8000/delete/${userId}`, {
+                    method:'POST',
+                    headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+
+                },
+                }).then(async (res)=>{
+                    if (row) {
+                        row.remove();
+                    }
+                }).catch((e)=>{
+                    console.log(e);
+                })
+
+            });
+        });
+    });
+
+
+    // Search 
+
+    document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("search-button").addEventListener("click", function () {
+            var searchQuery = document.getElementById("search-input").value;
+            fetch("{% url 'search_data' %}", {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'search_query=' + encodeURIComponent(searchQuery),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    var users = data.users;
+                    var tableContent = '';
+                    users.forEach(function (user) {
+                        tableContent += `
+                            <tr data-id="${user.id}">
+                                <td>${user.id}</td>
+                                <td>${user.username}</td>
+                                <td>${user.email}</td>
+                                <td>
+                                    <button class="btn btn-warning btn-sm edit-user m-1"
+                                        data-id="${user.id}">Edit</button>
+                                    <a class="btn btn-danger btn-sm m-1 delete-user"
+                                        data-id="${user.id}" onclick="deleteUserById(${user.id})">Delete</a>
+                                </td>
+                            </tr>`;
+                    });
+                    
+                    document.getElementById("user-table").innerHTML = tableContent;
+                });
+        });
+
+    });
+
+
+    // Edit Data
+
+    document.addEventListener("DOMContentLoaded", function () {
+            var editButtons = document.querySelectorAll(".edit-user");
+            editButtons.forEach(function (button) {
+                button.addEventListener("click", async function () {
+                    // console.log("Edit button clicked!"); 
+                    var userId = this.getAttribute("data-id");
+                    var username = this.parentElement.parentElement.children[1].textContent;
+                    var email = this.parentElement.parentElement.children[2].textContent;
+                    var password = this.parentElement.parentElement.children[3].textContent;; 
+                    // console.log("User ID: " + userId); 
+                    // console.log("Username: " + username);
+                    // console.log("Email: " + email);
+                    
+
+                    
+                    document.getElementById("userid").value = userId;
+                    document.getElementById("username").value = username;
+                    document.getElementById("email").value = email;
+                    document.getElementById("password").value = password;
+                });
+            });
+        });
+
+
+</script>
